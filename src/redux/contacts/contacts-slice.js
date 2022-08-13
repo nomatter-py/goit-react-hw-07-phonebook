@@ -6,7 +6,6 @@ import {
 } from './contacts-operations';
 
 const setRejected = (state, action) => {
-  state.isLoading = false;
   state.error = action.payload;
 };
 
@@ -37,6 +36,20 @@ export const contactsSlice = createSlice({
     [fetchContacts.fulfilled]: (state, action) => {
       state.isLoading = false;
       state.items = action.payload;
+    },
+    [postContact.pending]: state => {
+      state.isLoading = true;
+    },
+    [postContact.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.items.push(action.payload);
+    },
+    [removeContact.pending]: state => {
+      state.isLoading = true;
+    },
+    [removeContact.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.items = state.items.filter(item => item.id !== action.payload);
     },
     [fetchContacts.rejected]: setRejected,
     [removeContact.rejected]: setRejected,
